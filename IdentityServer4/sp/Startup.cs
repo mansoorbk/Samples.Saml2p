@@ -1,5 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
-using IdentityServer4;
+using Duende.IdentityServer;
 using IdentityServer4.Quickstart.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +17,8 @@ namespace sp
 
             var builder = services.AddIdentityServer(options =>
                 {
+                    options.KeyManagement.Enabled = false;
+
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
@@ -41,8 +43,8 @@ namespace sp
             // SP configuration
             services.AddAuthentication()
                 .AddSaml2p("saml2p", options => {
-                    options.Licensee = "/* your DEMO Licensee */";
-                    options.LicenseKey = "/* your DEMO LicenseKey */";
+                    options.Licensee = LicenseKey.Licensee;
+                    options.LicenseKey = LicenseKey.Key;
 
                     // The IdP you want to integrate with
                     options.IdentityProviderOptions = new IdpOptions
@@ -56,7 +58,7 @@ namespace sp
                     // Details about yourself (the SP)
                     options.ServiceProviderOptions = new SpOptions
                     {
-                        EntityId = "https://localhost:5001/saml",
+                        EntityId = "https://localhost:5002/saml",
                         MetadataPath = "/saml/metadata",
                         SignAuthenticationRequests = true, // OPTIONAL - use if you want to sign your auth requests
                         SigningCertificate = new X509Certificate2("testclient.pfx", "test")
@@ -65,6 +67,10 @@ namespace sp
                     options.NameIdClaimType = "sub";
                     options.CallbackPath = "/signin-saml";
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    // IdP-Initiated SSO
+                    options.AllowIdpInitiatedSso = true;
+                    options.IdPInitiatedSsoCompletionPath = "/";
                 });
         }
 

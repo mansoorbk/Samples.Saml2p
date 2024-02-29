@@ -1,6 +1,6 @@
 FROM microsoft/dotnet:sdk AS build-env
 WORKDIR /app
-EXPOSE 5001
+EXPOSE 5002
 
 # Copy csproj and restore as distinct layers
 COPY *.csproj ./
