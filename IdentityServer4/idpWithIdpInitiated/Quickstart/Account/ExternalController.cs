@@ -5,12 +5,12 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using IdentityModel;
-using IdentityServer4;
-using IdentityServer4.Events;
-using IdentityServer4.Quickstart.UI;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
-using IdentityServer4.Test;
+using Duende.IdentityServer;
+using Duende.IdentityServer.Events;
+using Duende.IdentityServer.Quickstart.UI;
+using Duende.IdentityServer.Services;
+using Duende.IdentityServer.Stores;
+using Duende.IdentityServer.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -86,7 +86,7 @@ namespace Host.Quickstart.Account
         public async Task<IActionResult> Callback()
         {
             // read external identity from the temporary cookie
-            var result = await HttpContext.AuthenticateAsync(IdentityServer4.IdentityServerConstants.ExternalCookieAuthenticationScheme);
+            var result = await HttpContext.AuthenticateAsync(Duende.IdentityServer.IdentityServerConstants.ExternalCookieAuthenticationScheme);
             if (result?.Succeeded != true)
             {
                 throw new Exception("External authentication error");
@@ -121,7 +121,7 @@ namespace Host.Quickstart.Account
             }, localSignInProps);
 
             // delete temporary cookie used during external authentication
-            await HttpContext.SignOutAsync(IdentityServer4.IdentityServerConstants.ExternalCookieAuthenticationScheme);
+            await HttpContext.SignOutAsync(Duende.IdentityServer.IdentityServerConstants.ExternalCookieAuthenticationScheme);
 
             // retrieve return URL
             var returnUrl = result.Properties.Items["returnUrl"] ?? "~/";
@@ -174,7 +174,7 @@ namespace Host.Quickstart.Account
                 }
 
                 await HttpContext.SignInAsync(
-                    IdentityServer4.IdentityServerConstants.ExternalCookieAuthenticationScheme,
+                    Duende.IdentityServer.IdentityServerConstants.ExternalCookieAuthenticationScheme,
                     new ClaimsPrincipal(id),
                     props);
                 return Redirect(props.RedirectUri);

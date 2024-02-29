@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using IdentityServer4.Stores;
+using Duende.IdentityServer.Stores;
 
-namespace IdentityServer4.Quickstart.UI
+namespace Duende.IdentityServer.Quickstart.UI
 {
     public static class Extensions
     {

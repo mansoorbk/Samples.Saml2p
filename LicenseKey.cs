@@ -1,8 +1,8 @@
 ﻿namespace Rsk.Saml.Samples
 {
-public static class LicenseKey
-{
-    public const string Licensee = "DEMO";
-    public const string Key = "visit https://www.identityserver.com/products/saml2p to obtain a free demo key";
-}
+    public static class LicenseKey
+    {
+        public const string Licensee = "EdWire Inc.";
+        public const string Key = "eyJTb2xkRm9yIjozNTAwLjAsIktleVByZXNldCI6NywiU2F2ZUtleSI6dHJ1ZSwiTGVnYWN5S2V5IjpmYWxzZSwiR3JlZXRpbmdOYW1lIjoiSmVhbi1GcmFuY29pcyIsIlByaW1hcnlFbWFpbCI6ImpmQGVkd2lyZS5jb20iLCJSZW5ld2FsU2VudFRpbWUiOiIwMDAxLTAxLTAxVDAwOjAwOjAwIiwiYXV0aCI6IkVkV2lyZSBJbmMuIiwiaWF0IjoiMjAyNC0wMS0xOVQwMDowMDowMCIsIm9yZyI6IkVkV2lyZSBJbmMuIiwiYXVkIjoyfQ==.QDLq1ToFda7qmJyikPNlgzxF3ymLI5whrwIiwp75rRyTXXCMrnNIVaErYB4gXHHJRBl2LyTeDgwoCdzSCjz77gJIywroyBxsfk1QVjQKhyfNic59hRS9AV+9d7p1g61mYhSKtdOsk6E4DAVwoaHYXC6fzarQFp33rT6Mc9x9y7tQA2QQotlTp8JwAsOwP2Kw8iYrwn6WBu+gUcU1ted3wW1nKli6xLl/Tvp+kn7MehwFP8kn3FL6UC8ZKrfgjTJprX0LmJ5FZ6qS/7SvWCUTGNJLwle6yO4KM8XfY41C2Hu4ba+6DkOqxmMm9fa61BpmbwLeYD2ATlBsgCnYHK81+f659vTMvrxr8DkG1nOk6h0JrsDuyYLaihz/a3oXXE+iaswBUkE0/V6glBgkmQB8qIa2ZJNggsCp3lUIMs2bAWwmsMxnO8Xwt0HXucluMHfcPwcc+W3rinLg74r8kErwh36jaWFV9bxW1+UU78wrhenPwUsZaNUSP8odO+GlrbIXX3no1WdBEdjfzzXCPW4gcWufpEjzT3l95jsVjF/7Y+nKpMnByh9cQGA+wENU19Y7ltFetYalRUgVBc6/lhg4zsmYJHF1XyrhIM7IElKry+TONnrqp7M2edcI1oc3MSnZMzgqfi4dtUTy6dDNyjPLsRptH/5O4iOtE66uaSuj7pk=";
+    }
 }

@@ -1,11 +1,12 @@
 using System.Security.Cryptography.X509Certificates;
-using IdentityServer4;
-using IdentityServer4.Quickstart.UI;
+using Duende.IdentityServer;
+using Duende.IdentityServer.Quickstart.UI;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Rsk.Saml.Configuration;
 using Rsk.Saml.Samples;
+using Serilog;
 
 namespace idpWithIdpInitiated
 {
@@ -17,14 +18,20 @@ namespace idpWithIdpInitiated
 
             var builder = services.AddIdentityServer(options =>
                 {
+                    options.KeyManagement.Enabled = false;
+
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
+
+                    // see https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/
+                    options.EmitStaticAudienceClaim = true;
                 })
                 .AddTestUsers(TestUsers.Users)
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApis())
+                .AddInMemoryApiScopes(Config.GetApiScopes())
                 .AddInMemoryClients(Config.GetClients())
                 .AddSigningCredential(new X509Certificate2("idsrv3test.pfx", "idsrv3test"));
 
@@ -41,10 +48,13 @@ namespace idpWithIdpInitiated
             // use different cookie name that sp...
             builder.Services.Configure<CookieAuthenticationOptions>(IdentityServerConstants.DefaultCookieAuthenticationScheme,
                 cookie => { cookie.Cookie.Name = "idsrv.idpWithIdpInitiated"; });
+
+
         }
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
 
             app.UseDeveloperExceptionPage();

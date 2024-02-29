@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Rsk.Saml.Configuration;
 using Rsk.Saml.Samples;
 using Serilog;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DuendeIdP;
 
@@ -15,10 +16,10 @@ internal static class HostingExtensions
 
         var isBuilder = builder.Services.AddIdentityServer(options =>
             {
-                options.KeyManagement.Enabled = true;
-                options.KeyManagement.SigningAlgorithms = new[] {
-                    new SigningAlgorithmOptions("RS256") {UseX509Certificate = true}
-                };
+                options.KeyManagement.Enabled = false;
+                //options.KeyManagement.SigningAlgorithms = new[] {
+                //    new SigningAlgorithmOptions("RS256") {UseX509Certificate = true}
+                //};
 
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
@@ -32,8 +33,10 @@ internal static class HostingExtensions
 
         // in-memory, code config
         isBuilder.AddInMemoryIdentityResources(Config.GetIdentityResources());
+        isBuilder.AddInMemoryApiResources(Config.GetApis());
         isBuilder.AddInMemoryApiScopes(Config.GetApiScopes());
         isBuilder.AddInMemoryClients(Config.GetClients());
+        isBuilder.AddSigningCredential(new X509Certificate2("idsrv3test.pfx", "idsrv3test"));
 
         isBuilder.AddSamlPlugin(options =>
             {
@@ -54,7 +57,8 @@ internal static class HostingExtensions
     public static WebApplication ConfigurePipeline(this WebApplication app)
     { 
         app.UseSerilogRequestLogging();
-    
+        app.UseHttpsRedirection();
+
         app.UseDeveloperExceptionPage();
 
         app.UseStaticFiles();
@@ -64,9 +68,8 @@ internal static class HostingExtensions
             .UseIdentityServerSamlPlugin(); // enables SAML endpoints (e.g. ACS and SLO)
 
         app.UseAuthorization();
-        
-        app.MapRazorPages()
-            .RequireAuthorization();
+
+        app.MapRazorPages();
 
         return app;
     }

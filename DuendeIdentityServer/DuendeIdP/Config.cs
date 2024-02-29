@@ -3,6 +3,7 @@ using Duende.IdentityServer;
 using Rsk.Saml;
 using Rsk.Saml.Models;
 using ServiceProvider = Rsk.Saml.Models.ServiceProvider;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DuendeIdP;
 
@@ -52,19 +53,31 @@ public static class Config
     {
         return new[]
         {
-            new ServiceProvider
-            {
-                EntityId = "https://localhost:5002/saml",
-                AssertionConsumerServices =
+             new ServiceProvider
                 {
-                    new Service(SamlConstants.BindingTypes.HttpPost , "https://localhost:5002/saml/sso"),
-                    new Service(SamlConstants.BindingTypes.HttpPost, "https://localhost:5002/signin-saml-3")
+                    EntityId = "https://localhost:5002/saml",
+                    AssertionConsumerServices =
+                        {new Service(SamlConstants.BindingTypes.HttpPost, "https://localhost:5002/signin-saml")},
+                    SigningCertificates = {new X509Certificate2("testclient.cer")},
+                    AllowIdpInitiatedSso = true
                 },
-                SingleLogoutServices =
-                {
-                    new Service(SamlConstants.BindingTypes.HttpRedirect , "https://localhost:5002/saml/slo")
-                }
-            }
+
+            //new ServiceProvider
+            //{
+            //    EntityId = "https://localhost:5002/saml",
+            //    AllowIdpInitiatedSso = true, // This must be set to true
+            //    AssertionConsumerServices =
+            //    {
+            //        new Service(SamlConstants.BindingTypes.HttpPost , "https://localhost:5002/saml/sso"),
+            //        new Service(SamlConstants.BindingTypes.HttpPost, "https://localhost:5002/sign-in")
+            //    },
+            //    SingleLogoutServices =
+            //    {
+            //        new Service(SamlConstants.BindingTypes.HttpRedirect , "https://localhost:5002/saml/slo"),
+            //        new Service(SamlConstants.BindingTypes.HttpRedirect , "https://localhost:5002/saml/sign-out")
+            //    }
+            //}
         };
     }
 }
+

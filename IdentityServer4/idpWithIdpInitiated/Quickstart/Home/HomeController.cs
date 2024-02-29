@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
-using IdentityServer4.Services;
+using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Rsk.Saml.Models;
 using Rsk.Saml.Services;
 
-namespace IdentityServer4.Quickstart.UI
+
+namespace Duende.IdentityServer.Quickstart.UI
 {
     [SecurityHeaders]
     [Authorize]

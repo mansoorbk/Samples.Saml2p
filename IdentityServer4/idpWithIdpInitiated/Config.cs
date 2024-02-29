@@ -1,118 +1,82 @@
-﻿using IdentityServer4.Models;
+﻿using Duende.IdentityServer.Models;
+using Duende.IdentityServer;
+using Rsk.Saml.Models;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using IdentityServer4;
 using Rsk.Saml;
-using Rsk.Saml.Models;
 
-namespace idpWithIdpInitiated
+namespace idpWithIdpInitiated;
+
+public static class Config
 {
-    public static class Config
+    public static IEnumerable<IdentityResource> GetIdentityResources()
     {
-        public static IEnumerable<IdentityResource> GetIdentityResources()
+        return new IdentityResource[]
         {
-            return new IdentityResource[]
-            {
-                new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
-            };
-        }
+            new IdentityResources.OpenId(),
+            new IdentityResources.Profile()
+        };
+    }
 
-        public static IEnumerable<ApiResource> GetApis()
+    public static IEnumerable<ApiResource> GetApis()
+    {
+        return new ApiResource[]
         {
-            return new ApiResource[]
-            {
-                new ApiResource("api1", "My API #1")
-            };
-        }
+            new ApiResource("api1", "My API #1")
+        };
+    }
 
-        public static IEnumerable<Client> GetClients()
+    public static IEnumerable<ApiScope> GetApiScopes()
+    {
+        return new ApiScope[]
         {
-            return new[]
-            {
-                // client credentials flow client
-                new Client
-                {
-                    ClientId = "client",
-                    ClientName = "Client Credentials Client",
+            new ApiScope("scope1"),
+            new ApiScope("scope2"),
+        };
+    }
 
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = {new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256())},
-
-                    AllowedScopes = {"api1"}
-                },
-
-                // MVC client using hybrid flow
-                new Client
-                {
-                    ClientId = "mvc",
-                    ClientName = "MVC Client",
-
-                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
-                    ClientSecrets = {new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256())},
-
-                    RedirectUris = {"https://localhost:5001/signin-oidc"},
-                    FrontChannelLogoutUri = "https://localhost:5001/signout-oidc",
-                    PostLogoutRedirectUris = {"https://localhost:5001/signout-callback-oidc"},
-
-                    AllowOfflineAccess = true,
-                    AllowedScopes = {"openid", "profile", "api1"}
-                },
-
-                // SPA client using implicit flow
-                new Client
-                {
-                    ClientId = "spa",
-                    ClientName = "SPA Client",
-                    ClientUri = "https://identityserver.io",
-
-                    AllowedGrantTypes = GrantTypes.Implicit,
-                    AllowAccessTokensViaBrowser = true,
-
-                    RedirectUris =
-                    {
-                        "https://localhost:5002/index.html",
-                        "https://localhost:5002/callback.html",
-                        "https://localhost:5002/silent.html",
-                        "https://localhost:5002/popup.html",
-                    },
-
-                    PostLogoutRedirectUris = {"https://localhost:5002/index.html"},
-                    AllowedCorsOrigins = {"https://localhost:5002"},
-
-                    AllowedScopes = {"openid", "profile", "api1"}
-                },
-
-                // SAML client
-                new Client
-                {
-                    ClientId = "https://localhost:5001/saml",
-                    ClientName = "RSK SAML2P Test Client",
-                    ProtocolType = IdentityServerConstants.ProtocolTypes.Saml2p,
-                    AllowedScopes = {"openid", "profile"}
-                },
-                new Client
-                {
-                    ClientId = "https://localhost:5002/saml",
-                    ClientName = "RSK SAML2P Test Client - Multiple SP",
-                    ProtocolType = IdentityServerConstants.ProtocolTypes.Saml2p,
-                    AllowedScopes = {"openid", "profile"}
-                }
-            };
-        }
-        public static IEnumerable<ServiceProvider> GetServiceProviders()
+    public static IEnumerable<Client> GetClients()
+    {
+        return new[]
         {
-            return new[]
+            new Client
             {
-                new ServiceProvider
+                ClientId = "https://localhost:5002/saml",
+                ClientName = "RSK SAML2P Test Client - Multiple SP",
+                ProtocolType = IdentityServerConstants.ProtocolTypes.Saml2p,
+                AllowedScopes = {"openid", "profile"}
+            }
+        };
+    }
+
+    public static IEnumerable<ServiceProvider> GetServiceProviders()
+    {
+        return new[]
+        {
+             new ServiceProvider
                 {
-                    EntityId = "https://localhost:5001/saml",
+                    EntityId = "https://localhost:5002/saml",
                     AssertionConsumerServices =
-                        {new Service(SamlConstants.BindingTypes.HttpPost, "https://localhost:5001/signin-saml")},
+                        {new Service(SamlConstants.BindingTypes.HttpPost, "https://localhost:5002/signin-saml")},
                     SigningCertificates = {new X509Certificate2("testclient.cer")},
                     AllowIdpInitiatedSso = true
-                }
-            };
-        }
+                },
+
+            //new ServiceProvider
+            //{
+            //    EntityId = "https://localhost:5002/saml",
+            //    AllowIdpInitiatedSso = true, // This must be set to true
+            //    AssertionConsumerServices =
+            //    {
+            //        new Service(SamlConstants.BindingTypes.HttpPost , "https://localhost:5002/saml/sso"),
+            //        new Service(SamlConstants.BindingTypes.HttpPost, "https://localhost:5002/sign-in")
+            //    },
+            //    SingleLogoutServices =
+            //    {
+            //        new Service(SamlConstants.BindingTypes.HttpRedirect , "https://localhost:5002/saml/slo"),
+            //        new Service(SamlConstants.BindingTypes.HttpRedirect , "https://localhost:5002/saml/sign-out")
+            //    }
+            //}
+        };
     }
 }

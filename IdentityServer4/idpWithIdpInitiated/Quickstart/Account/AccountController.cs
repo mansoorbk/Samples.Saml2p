@@ -3,12 +3,12 @@
 
 
 using IdentityModel;
-using IdentityServer4.Events;
-using IdentityServer4.Extensions;
-using IdentityServer4.Models;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
-using IdentityServer4.Test;
+using Duende.IdentityServer.Events;
+using Duende.IdentityServer.Extensions;
+using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Services;
+using Duende.IdentityServer.Stores;
+using Duende.IdentityServer.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,8 +16,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Duende.IdentityServer;
 
-namespace IdentityServer4.Quickstart.UI
+namespace Duende.IdentityServer.Quickstart.UI
 {
     /// <summary>
     /// This sample controller implements a typical login/logout/provision workflow for local and external accounts.
@@ -330,7 +331,7 @@ namespace IdentityServer4.Quickstart.UI
             if (User?.Identity.IsAuthenticated == true)
             {
                 var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-                if (idp != null && idp != IdentityServer4.IdentityServerConstants.LocalIdentityProvider)
+                if (idp != null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
                 {
                     var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
                     if (providerSupportsSignout)
